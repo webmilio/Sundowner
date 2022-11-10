@@ -1,4 +1,5 @@
-﻿using Webmilio.Commons.DependencyInjection;
+﻿using Sundowner.VBScript.Expressions;
+using Webmilio.Commons.DependencyInjection;
 using Webmilio.Commons.Extensions.Reflection;
 
 namespace Sunsetter.Expressions;
@@ -16,26 +17,13 @@ public class ExpressionFactory
             .ToArray();
     }
 
-    public Expression? FindAct(string expression)
+    public Expression? Get(string str)
     {
-        Expression? act = null;
+        Expression? expression = null;
 
-        for (int i = 0; i < _prototypes.Length && act == null; i++)
-        {
-            if (_prototypes[i].Matches(expression))
-                act = _prototypes[i].GetType().Create<Expression>();
-        }
+        for (int i = 0; i < _prototypes.Length && expression == null; i++)
+            expression = _prototypes[i].Get(str);
 
-        return act;
-    }
-
-    public Expression? ParseAct(string expression)
-    {
-        var act = FindAct(expression);
-
-        if (act != null)
-            act.Parse(this, expression);
-
-        return act;
+        return expression;
     }
 }

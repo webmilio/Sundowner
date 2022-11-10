@@ -1,30 +1,48 @@
 ﻿using System.Text;
 
-namespace Sunsetter.Expressions;
+namespace Sundowner.VBScript.Expressions;
 
-public abstract class Expression : Term
+public abstract class Expression
 {
-    public abstract void Parse(ExpressionFactory actFactory, string expression);
+    public abstract Expression? Get(string str);
 
-    public abstract bool Matches(string expression);
-
-    public Term? Actor { get; set; }
-    public Term? Audience { get; set; }
-
-    public override string Content
+    public static T? GetSingleKeyword<T>(string str, string keyword) where T : Expression, new()
     {
-        get
+        var dimIndex = str.IndexOf(keyword, StringComparison.OrdinalIgnoreCase);
+
+        if (dimIndex < 0)
+            return null;
+
+        var dimEndIndex = dimIndex + keyword.Length;
+        var variableEnd = str.IndexOf(" ", dimEndIndex + 1, StringComparison.OrdinalIgnoreCase);
+
+        if (variableEnd < 0)
+            variableEnd = str.Length;
+
+        return new T()
         {
-            StringBuilder sb = new();
-
-            sb.Append(Actor);
-
-            if (Actor != null && Audience != null)
-                sb.Append(" -> ");
-
-            sb.Append(Audience);
-
-            return sb.ToString();
-        }
+            First = new(dimIndex + 1, variableEnd - dimEndIndex, str[dimEndIndex..variableEnd])
+        };
     }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new(GetType().Name);
+
+        sb.Append(" (");
+        sb.Append(First);
+
+        if (Second != null)
+            sb.Append("<-");
+        
+        sb.Append(Second);
+        sb.Append(')');
+
+        return sb.ToString();
+    }
+
+    public Term? First { get; init; }
+    public Term? Second { get; init; }
+
+    public virtual int Priority => 0;
 }

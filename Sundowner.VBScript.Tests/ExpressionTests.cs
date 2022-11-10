@@ -1,4 +1,5 @@
 using Webmilio.Commons.DependencyInjection;
+using Sundowner.VBScript.Expressions;
 using Sunsetter.Expressions;
 
 namespace Sunsetter.Tests;
@@ -6,69 +7,76 @@ namespace Sunsetter.Tests;
 [TestClass]
 public class ExpressionTests
 {
+    private const string First = "abc", Second = "def";
+
     private readonly ServiceCollection _services = new(false);
-    private ExpressionFactory _acts;
+    private ExpressionFactory _exprs;
 
     [TestInitialize]
     public void Setup()
     {
         _services.AddSingleton<ExpressionFactory>();
-        _acts = _services.GetRequiredService<ExpressionFactory>();
+        _exprs = _services.GetRequiredService<ExpressionFactory>();
     }
 
     [TestMethod]
-    public void Assign()
+    public void Dim()
     {
-        const string Actor = "abc", Audience = "def";
-
-        var act = _acts.ParseAct($"{Audience} = {Actor}");
-        act.ValidateSimpleAct(typeof(Assign), Actor, Audience);
-    }
-
-    [TestMethod]
-    public void Declare()
-    {
-        const string Audience = "abc";
-
-        var act = _acts.ParseAct($"Dim {Audience} As Integer");
-        act.ValidateSimpleAct(typeof(Declare), null, Audience);
+        var expr = _exprs.Get($"dIm {First}    AS StrING");
+        expr!.ValidateSimpleExpression(typeof(Dim), First, null);
     }
 
     [TestMethod]
     public void Erase()
     {
-        const string Audience = "abc";
-
-        var act = _acts.ParseAct($"Erase {Audience} asdasdasdasdasd");
-        act.ValidateSimpleAct(typeof(Erase), null, Audience);
+        var expr = _exprs.Get($"eRASe {First} asdasdasd");
+        expr!.ValidateSimpleExpression(typeof(Erase), First, null);
     }
 
     [TestMethod]
-    public void Redimension()
+    public void Assign()
     {
-        const string Audience = "abc";
-
-        var act = _acts.ParseAct($"ReDim Preserve {Audience}(10, 10, 15)");
-        act.ValidateSimpleAct(typeof(Redimension), null, Audience);
+        var expr = _exprs.Get($"{First} = {Second}");
+        expr!.ValidateSimpleExpression(typeof(Assign), First, Second);
     }
 
-    [TestMethod]
-    public void MethodCall()
-    {
-        const string Actor = "ExampleMethod";
-        const string Audience = "abc";
+    //[TestMethod]
+    //public void Declare()
+    //{
+    //    var act = _acts.GetExpression($"Dim {Second} As Integer");
+    //    act.ValidateSimpleAct(typeof(Declare), null, Second);
+    //}
 
-        var act = _acts.ParseAct($"{Actor}             ({Audience})");
-        act.ValidateSimpleAct(typeof(MethodCall), Actor, Audience);
-    }
+    //[TestMethod]
+    //public void Erase()
+    //{
+    //    var act = _acts.GetExpression($"Erase {Second} asdasdasdasdasd");
+    //    act.ValidateSimpleAct(typeof(Erase), null, Second);
+    //}
+
+    //[TestMethod]
+    //public void Redimension()
+    //{
+    //    var act = _acts.GetExpression($"ReDim Preserve {Second}(10, 10, 15)");
+    //    act.ValidateSimpleAct(typeof(Redimension), null, Second);
+    //}
+
+    //[TestMethod]
+    //public void MethodCall()
+    //{
+    //    const string Actor = "ExampleMethod";
+
+    //    var act = _acts.GetExpression($"{Actor}             ({Second})");
+    //    act.ValidateSimpleAct(typeof(MethodCall), Actor, Second);
+    //}
 }
 
 internal static class ActTestsExtensions
 {
-    public static void ValidateSimpleAct(this Expression act, Type actType, string? actor, string? audience)
+    public static void ValidateSimpleExpression(this Expression expr, Type actType, string? first, string? second)
     {
-        Assert.IsInstanceOfType(act, actType);
-        Assert.AreEqual(actor, (act.Actor as Term)?.Content);
-        Assert.AreEqual(audience, (act.Audience as Term)?.Content);
+        Assert.IsInstanceOfType(expr, actType);
+        Assert.AreEqual(first, expr.First?.Content);
+        Assert.AreEqual(second, expr.Second?.Content);
     }
 }

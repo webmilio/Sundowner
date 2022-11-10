@@ -1,4 +1,5 @@
-﻿using Sunsetter.Expressions;
+﻿using Sundowner.VBScript.Expressions;
+using Sunsetter.Expressions;
 using Webmilio.Commons.DependencyInjection;
 using Webmilio.Commons.Extensions;
 
@@ -14,7 +15,7 @@ internal class Program
 
     public void Start()
     {
-        string testFile = "Files/CustomerManager.asp";
+        string testFile = "Files/Test.asp";
         string variablesFile = "Files/Variables.txt";
 
         var lines = File.ReadAllLines(testFile);
@@ -22,14 +23,14 @@ internal class Program
 
         var expressionFactory = Services.GetRequiredService<ExpressionFactory>();
 
-        List<TermBundle> expressions = new(lines.Length);
+        List<ExpressionBundle> expressions = new(lines.Length);
 
         for (int i = 0; i < lines.Length; i++)
         {
-            var expression = expressionFactory.ParseAct(lines[i]);
+            var expression = expressionFactory.Get(lines[i]);
 
             if (expression != null)
-                expressions.Add(new(i, expression));
+                expressions.Add(new(i + 1, expression));
         }
 
         expressions.Do(Console.WriteLine);
@@ -39,11 +40,11 @@ internal class Program
 
     private static void Main(string[] args) => new Program().Start();
 
-    private record TermBundle(int LineIndex, Term Term)
+    private record ExpressionBundle(int LineIndex, Expression Expression)
     {
         public override string ToString()
         {
-            return $"{LineIndex}: {Term}";
+            return $"{LineIndex}: {Expression}";
         }
     }
 }

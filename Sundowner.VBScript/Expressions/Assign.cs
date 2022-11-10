@@ -1,17 +1,30 @@
-﻿namespace Sunsetter.Expressions;
+﻿namespace Sundowner.VBScript.Expressions;
 
 public class Assign : Expression
 {
-    public override void Parse(ExpressionFactory actFactory, string expression)
+    public override Expression? Get(string str)
     {
-        var parts = expression.Split('=', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var equalsIndex = str.IndexOf('=');
 
-        Audience = new Term(parts[0]);
-        Actor = new Term(parts[1]);
+        if (equalsIndex < 0)
+            return null;
+
+        // Find leftmost space from equals
+        var firstEndIndex = str.LastIndexOf(' ', equalsIndex) - 1;
+
+        if (firstEndIndex >= equalsIndex)
+            firstEndIndex = equalsIndex - 1;
+
+        var firstStartIndex = str.LastIndexOf(' ', firstEndIndex - 1);
+
+        if (firstStartIndex < 0)
+            firstStartIndex = 0;
+
+        return new Assign()
+        {
+            First = new(firstEndIndex, firstEndIndex - firstStartIndex + 1, str[firstStartIndex..(firstEndIndex + 1)])
+        };
     }
 
-    public override bool Matches(string expression)
-    {
-        return expression.Contains('=');
-    }
+    public override int Priority => 1;
 }
