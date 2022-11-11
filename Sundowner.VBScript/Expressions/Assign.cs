@@ -22,7 +22,10 @@ public class Assign : Expression
 
         return new Assign()
         {
-            First = new(firstEndIndex, firstEndIndex - firstStartIndex + 1, str[firstStartIndex..(firstEndIndex + 1)])
+            First = new(
+                firstEndIndex, 
+                firstEndIndex - firstStartIndex + 1, 
+                str[firstStartIndex..(firstEndIndex + 1)])
         };
     }
 
