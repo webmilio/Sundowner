@@ -29,5 +29,5 @@ public class Assign : Expression
         };
     }
 
-    public override int Priority => 1;
+    public override int Priority => 10;
 }
