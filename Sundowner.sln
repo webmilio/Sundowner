@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sundowner.VBScript", "Sundo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sundowner.VBScript.Tests", "Sundowner.VBScript.Tests\Sundowner.VBScript.Tests.csproj", "{158C0083-6AA8-421B-948A-2944C7D1B459}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sundowner", "Sundowner\Sundowner.csproj", "{1A937C1D-C2F6-4199-89D7-7CE1837C43AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{158C0083-6AA8-421B-948A-2944C7D1B459}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{158C0083-6AA8-421B-948A-2944C7D1B459}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{158C0083-6AA8-421B-948A-2944C7D1B459}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A937C1D-C2F6-4199-89D7-7CE1837C43AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A937C1D-C2F6-4199-89D7-7CE1837C43AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A937C1D-C2F6-4199-89D7-7CE1837C43AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A937C1D-C2F6-4199-89D7-7CE1837C43AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
